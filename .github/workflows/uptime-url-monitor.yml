@@ -8,6 +8,7 @@ on:
 jobs:
   monitor:
     runs-on: ubuntu-latest
+
     steps:
       - name: Check uptime of the URL
         id: uptime_check
@@ -16,32 +17,24 @@ jobs:
           STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}" https://www.google.com)
 
           # Save the status code as an output variable for this step
-          echo "::set-output name=status_code::$STATUS_CODE"
+          echo "status_code=$STATUS_CODE" >> $GITHUB_ENV
 
-      
-      
       - name: Send Email Report
         if: always()
         run: |
-          # Install necessary packages for sending email
-          sudo apt-get install -y msmtp jq
-
-           # Debugging: Check the GitHub secrets values and status code
-           echo "GMAIL_USERNAME: $GMAIL_USERNAME"
-           echo "STATUS_CODE: $STATUS_CODE"
+          # Install msmtp to send email via Gmail SMTP
+          sudo apt-get install -y msmtp
 
           # Set Gmail credentials from GitHub secrets
-          GMAIL_USERNAME=${{ secrets.GMAIL_USERNAME }}
-          GMAIL_PASSWORD=${{ secrets.GMAIL_PASSWORD }}
+          GMAIL_USERNAME="${{ secrets.GMAIL_USERNAME }}"
+          GMAIL_PASSWORD="${{ secrets.GMAIL_PASSWORD }}"
           TO_EMAIL="ktharun4456@gmail.com"  # Replace with your recipient's email address
           SUBJECT="Website Uptime Report"
-          
 
+          # Get the status code from the previous step (stored in the environment variable)
+          STATUS_CODE=$STATUS_CODE
 
-          # Get the status code from the previous step
-          STATUS_CODE=${{ steps.uptime_check.outputs.status_code }}
-
-          # If the status code matches, the website is up, else it's down
+          # Determine the message body based on the website status
           if [ "$STATUS_CODE" == "200" ]; then
             BODY="The website https://www.google.com is UP. Status code: 200."
           else
@@ -60,8 +53,9 @@ jobs:
           echo "tls_starttls on" >> ~/.msmtprc
           echo "logfile ~/.msmtp.log" >> ~/.msmtprc
 
-          # Ensure that the .msmtprc file has correct permissions
+          # Ensure the .msmtprc file has correct permissions
           chmod 600 ~/.msmtprc  # Make the file readable and writable only by the user
 
           # Send the email
           echo -e "Subject: $SUBJECT\n\n$BODY" | msmtp $TO_EMAIL
+
