@@ -1,11 +1,9 @@
 name: Website Uptime Monitor
 
 on:
-  # Schedule the job to run every 5 minutes
   schedule:
     - cron: '*/5 * * * *'  # Runs every 5 minutes
-  # Optional: You can also trigger it manually with a 'workflow_dispatch'
-  workflow_dispatch:  # This will allow you to manually trigger the workflow if needed
+  workflow_dispatch:  # Optional manual trigger
 
 jobs:
   monitor:
@@ -13,7 +11,52 @@ jobs:
 
     steps:
       - name: Check uptime of the URL
+        id: uptime_check
         uses: srt32/uptime@v0.2
         with:
           url-to-hit: 'https://www.google.com'  # URL to check uptime
           expected-statuses: '200'  # The expected HTTP status code (200 means OK)
+
+      - name: Get HTTP Status Code
+        id: get_status_code
+        run: |
+          # Parse the output of the uptime action to extract the status code
+          # The action provides a JSON object, and we can access the status code from there.
+          echo "::set-output name=status_code::$(cat $GITHUB_WORKSPACE/uptime.json | jq .status)"
+        
+      - name: Send Email Report
+        if: always()  # This ensures the email is sent even if the uptime check fails
+        run: |
+          # Install necessary packages for sending email
+          sudo apt-get install -y msmtp jq
+
+          # Set Gmail credentials from GitHub secrets
+          GMAIL_USERNAME=${{ secrets.GMAIL_USERNAME }}
+          GMAIL_PASSWORD=${{ secrets.GMAIL_PASSWORD }}
+          TO_EMAIL="ktharun4456@gmail.com"  # Replace with your recipient's email address
+          SUBJECT="Website Uptime Report"
+          
+          # Get the status code from the previous step
+          STATUS_CODE=${{ steps.get_status_code.outputs.status_code }}
+          
+          # If the status code matches, the website is up, else it's down
+          if [ "$STATUS_CODE" == "200" ]; then
+            BODY="The website https://www.google.com is UP. Status code: 200."
+          else
+            BODY="The website https://www.google.com is DOWN. Status code: $STATUS_CODE."
+          fi
+
+          # Configure msmtp to send the email via Gmail SMTP
+          echo "account default" > ~/.msmtprc
+          echo "host smtp.gmail.com" >> ~/.msmtprc
+          echo "port 587" >> ~/.msmtprc
+          echo "from $GMAIL_USERNAME" >> ~/.msmtprc
+          echo "auth on" >> ~/.msmtprc
+          echo "user $GMAIL_USERNAME" >> ~/.msmtprc
+          echo "password $GMAIL_PASSWORD" >> ~/.msmtprc
+          echo "tls on" >> ~/.msmtprc
+          echo "tls_starttls on" >> ~/.msmtprc
+          echo "logfile ~/.msmtp.log" >> ~/.msmtprc
+
+          # Send the email
+          echo -e "Subject: $SUBJECT\n\n$BODY" | msmtp $TO_EMAIL
