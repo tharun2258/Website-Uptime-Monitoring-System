@@ -10,11 +10,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3  # This step checks out your repository so you can access files.
+
+      - name: Read URL from file
+        id: read_url
+        run: |
+          # Read the URL from the 'url.txt' file stored in the repository
+          URL=$(cat url.txt)
+          echo "URL=$URL" >> $GITHUB_ENV  # Set URL as an environment variable to use in subsequent steps
+
       - name: Check uptime of the URL
         id: uptime_check
         run: |
           # Use curl to check the status code of the website
-          STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}" https://www.google.com)
+          STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}" $URL)
 
           # Save the status code as an output variable for this step
           echo "::set-output name=status_code::$STATUS_CODE"
