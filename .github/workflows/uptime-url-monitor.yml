@@ -58,5 +58,8 @@ jobs:
           echo "tls_starttls on" >> ~/.msmtprc
           echo "logfile ~/.msmtp.log" >> ~/.msmtprc
 
+          # Set file permissions to restrict access to the .msmtprc file
+          chmod 600 ~/.msmtprc  # Make the file readable and writable only by the user
+
           # Send the email
           echo -e "Subject: $SUBJECT\n\n$BODY" | msmtp $TO_EMAIL
