@@ -17,8 +17,8 @@ jobs:
           STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}" https://www.google.com)
 
           # Save the status code as an output variable for this step
-          echo "status_code=$STATUS_CODE" >> $GITHUB_ENV
-
+          echo "::set-output name=status_code::$STATUS_CODE"
+          
       - name: Send Email Report
         if: always()
         run: |
