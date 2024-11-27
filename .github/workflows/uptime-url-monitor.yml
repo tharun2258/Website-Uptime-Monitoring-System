@@ -27,6 +27,8 @@ jobs:
           GMAIL_PASSWORD=${{ secrets.GMAIL_PASSWORD }}
           TO_EMAIL="ktharun4456@gmail.com"  # Replace with your recipient's email address
           SUBJECT="Website Uptime Report"
+          echo "GMAIL_USERNAME: $GMAIL_USERNAME"
+
 
           # Get the status code from the previous step
           STATUS_CODE=${{ steps.uptime_check.outputs.status_code }}
