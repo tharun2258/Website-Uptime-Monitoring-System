@@ -26,8 +26,8 @@ jobs:
           sudo apt-get install -y msmtp
 
           # Set Gmail credentials from GitHub secrets
-          GMAIL_USERNAME="${{ secrets.GMAIL_USERNAME }}"
-          GMAIL_PASSWORD="${{ secrets.GMAIL_PASSWORD }}"
+          GMAIL_USERNAME= ${{ secrets.GMAIL_USERNAME }}
+          GMAIL_PASSWORD= ${{ secrets.GMAIL_PASSWORD }}
           TO_EMAIL="ktharun4456@gmail.com"  # Replace with your recipient's email address
           SUBJECT="Website Uptime Report"
 
