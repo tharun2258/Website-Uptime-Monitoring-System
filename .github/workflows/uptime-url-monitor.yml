@@ -47,7 +47,7 @@ jobs:
 
           # Determine the message body based on the website status
           if [ "$STATUS_CODE" == "200" ]; then
-            BODY="The website $URL. Status code: 200."
+            BODY="The website $URL is UP. Status code: 200."
           else
             BODY="The website $URL is DOWN. Status code: $STATUS_CODE."
           fi
