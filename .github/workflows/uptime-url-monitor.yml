@@ -31,8 +31,9 @@ jobs:
           TO_EMAIL="ktharun4456@gmail.com"  # Replace with your recipient's email address
           SUBJECT="Website Uptime Report"
 
-          # Get the status code from the previous step (stored in the environment variable)
-          STATUS_CODE=$STATUS_CODE
+          # Get the status code from the previous step
+          STATUS_CODE=${{ steps.uptime_check.outputs.status_code }}
+
 
           # Determine the message body based on the website status
           if [ "$STATUS_CODE" == "200" ]; then
