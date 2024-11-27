@@ -1,0 +1,19 @@
+name: Website Uptime Monitor
+
+on:
+  # Schedule the job to run every 5 minutes
+  schedule:
+    - cron: '* * * * *'  # Runs every 5 minutes
+  # Optional: You can also trigger it manually with a 'workflow_dispatch'
+  workflow_dispatch:  # This will allow you to manually trigger the workflow if needed
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check uptime of the URL
+        uses: srt32/uptime@v0.2
+        with:
+          url-to-hit: 'https://www.google.com'  # URL to check uptime
+          expected-statuses: '200'  # The expected HTTP status code (200 means OK)
