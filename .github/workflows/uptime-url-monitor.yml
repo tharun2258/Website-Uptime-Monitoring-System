@@ -10,11 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check uptime of the URL
-        uses: srt32/uptime@v0.2
         id: uptime_check
-        with:
-          url-to-hit: https://www.google.com
-          expected-statuses: "200"
+        run: |
+          # Use curl to check the status code of the website
+          STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}" https://www.google.com)
+
+          # Save the status code as an output variable for this step
+          echo "::set-output name=status_code::$STATUS_CODE"
+
+      
       
       - name: Send Email Report
         if: always()
@@ -27,7 +31,7 @@ jobs:
           GMAIL_PASSWORD=${{ secrets.GMAIL_PASSWORD }}
           TO_EMAIL="ktharun4456@gmail.com"  # Replace with your recipient's email address
           SUBJECT="Website Uptime Report"
-          echo "GMAIL_USERNAME: $GMAIL_USERNAME"
+          
 
 
           # Get the status code from the previous step
