@@ -30,7 +30,7 @@ jobs:
           echo "::set-output name=status_code::$STATUS_CODE"
           
       - name: Send Email Report
-        if: always()
+        if: steps.uptime_check.outputs.status_code != '200'  # Send email only when the status code is not 200
         run: |
           # Install msmtp to send email via Gmail SMTP
           sudo apt-get install -y msmtp
