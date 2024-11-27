@@ -26,6 +26,10 @@ jobs:
           # Install necessary packages for sending email
           sudo apt-get install -y msmtp jq
 
+           # Debugging: Check the GitHub secrets values and status code
+           echo "GMAIL_USERNAME: $GMAIL_USERNAME"
+           echo "STATUS_CODE: $STATUS_CODE"
+
           # Set Gmail credentials from GitHub secrets
           GMAIL_USERNAME=${{ secrets.GMAIL_USERNAME }}
           GMAIL_PASSWORD=${{ secrets.GMAIL_PASSWORD }}
