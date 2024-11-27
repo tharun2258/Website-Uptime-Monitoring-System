@@ -2,7 +2,7 @@ name: Website Uptime Monitor
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # Runs every minute
+    - cron: '*/5 * * * *'  # Runs 5 every minute
   workflow_dispatch: null
 
 jobs:
