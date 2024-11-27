@@ -3,7 +3,7 @@ name: Website Uptime Monitor
 on:
   # Schedule the job to run every 5 minutes
   schedule:
-    - cron: '* * * * *'  # Runs every 5 minutes
+    - cron: '*/5 * * * *'  # Runs every 5 minutes
   # Optional: You can also trigger it manually with a 'workflow_dispatch'
   workflow_dispatch:  # This will allow you to manually trigger the workflow if needed
 
