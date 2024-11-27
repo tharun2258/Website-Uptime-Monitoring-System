@@ -38,7 +38,7 @@ jobs:
           # Set Gmail credentials from GitHub secrets
           GMAIL_USERNAME="${{ secrets.GMAIL_USERNAME }}"
           GMAIL_PASSWORD="${{ secrets.GMAIL_PASSWORD }}"
-          TO_EMAIL="# Replace with your recipient's email address"  
+          TO_EMAIL="ktharun4456@gmail.com" # Replace with your recipient's email address  
           SUBJECT="Website Uptime Report"
 
           # Get the status code from the previous step
