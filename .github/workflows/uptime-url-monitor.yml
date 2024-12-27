@@ -2,13 +2,13 @@ name: Website Uptime Monitor
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # Runs 5 every minute
+    # - cron: '*/5 * * * *'  # Runs 5 every minute
   workflow_dispatch: null
 
 jobs:
   monitor:
     runs-on: ubuntu-latest
-    environment: production
+    # environment: production
 
     steps:
       - name: Checkout repository
